@@ -47,9 +47,9 @@ namespace Lexer
             this.position += 1;
         }
 
-        public virtual bool Parse()
+        public virtual void Parse()
         {
-            return true;
+
         }
     }
 
@@ -65,7 +65,7 @@ namespace Lexer
             intString = new System.Text.StringBuilder();
         }
 
-        public override bool Parse()
+        public override void Parse()
         {
             NextCh();
             if (currentCh == '+' || currentCh == '-')
@@ -93,11 +93,58 @@ namespace Lexer
                 Error();
             }
 
-            return true;
-
         }
     }
-    
+
+    //task1
+    public class IntLexerSave : Lexer
+    {
+
+        protected System.Text.StringBuilder intString;
+        protected string number;
+        public int intnumber;
+        public IntLexerSave(string input)
+            : base(input)
+        {
+            intString = new System.Text.StringBuilder();
+        }
+
+        public override void Parse()
+        {
+            NextCh();
+            if (currentCh == '+' || currentCh == '-')
+            {
+                number += currentCh;
+                NextCh();
+            }
+
+            if (char.IsDigit(currentCh))
+            {
+                number += currentCh;
+                NextCh();
+            }
+            else
+            {
+                Error();
+            }
+
+            while (char.IsDigit(currentCh))
+            {
+                number += currentCh;
+                NextCh();
+            }
+
+            if (currentCharValue != -1)
+            { 
+                Error();
+            }
+
+            intnumber = int.Parse(number);
+            System.Console.WriteLine("Integer is recognized: " + intnumber.ToString());
+        }
+    }
+
+
     public class IdentLexer : Lexer
     {
         private string parseResult;
@@ -113,7 +160,7 @@ namespace Lexer
             builder = new StringBuilder();
         }
 
-        public override bool Parse()
+        public override void Parse()
         { 
             throw new NotImplementedException();
         }
@@ -127,7 +174,7 @@ namespace Lexer
         {
         }
 
-        public override bool Parse()
+        public override void Parse()
         {
             throw new NotImplementedException();
         }
@@ -149,7 +196,7 @@ namespace Lexer
             builder = new StringBuilder();
         }
 
-        public override bool Parse()
+        public override void Parse()
         {
             throw new NotImplementedException();
         }
@@ -171,7 +218,7 @@ namespace Lexer
             parseResult = new List<char>();
         }
 
-        public override bool Parse()
+        public override void Parse()
         {
             throw new NotImplementedException();
         }
@@ -192,7 +239,7 @@ namespace Lexer
             parseResult = new List<int>();
         }
 
-        public override bool Parse()
+        public override void Parse()
         {
             throw new NotImplementedException();
         }
@@ -214,7 +261,7 @@ namespace Lexer
             builder = new StringBuilder();
         }
 
-        public override bool Parse()
+        public override void Parse()
         {
             throw new NotImplementedException();
         }
@@ -238,7 +285,7 @@ namespace Lexer
             builder = new StringBuilder();
         }
 
-        public override bool Parse()
+        public override void Parse()
         {
             throw new NotImplementedException();
         }
@@ -262,7 +309,7 @@ namespace Lexer
             builder = new StringBuilder();
         }
 
-        public override bool Parse()
+        public override void Parse()
         {
             throw new NotImplementedException();
         }
@@ -285,7 +332,7 @@ namespace Lexer
             builder = new StringBuilder();
         }
 
-        public override bool Parse()
+        public override void Parse()
         {
             throw new NotImplementedException();
         }
@@ -309,7 +356,7 @@ namespace Lexer
             parseResult = new List<string>();
         }
 
-        public override bool Parse()
+        public override void Parse()
         {
             throw new NotImplementedException();
         }
@@ -317,6 +364,28 @@ namespace Lexer
 
     public class Program
     {
+        public static void test1()
+        {
+            System.Console.WriteLine("tests for task1");
+            string[] input = { "", "12a5", "+1237", "-345", "4+5" };
+
+
+            for (int i = 0; i < input.Length; ++i)
+            {
+                System.Console.WriteLine("      #{0}", i);
+                System.Console.WriteLine("Input line: '{0}'", input[i]);
+                IntLexerSave ILS = new IntLexerSave(input[i]);
+                try
+                {
+                    ILS.Parse();
+                }
+                catch (LexerException e)
+                {
+                    System.Console.WriteLine(e.Message);
+                }
+            }
+        }
+
         public static void Main()
         {
             string input = "154216";
